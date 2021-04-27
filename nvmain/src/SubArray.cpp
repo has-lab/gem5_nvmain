@@ -512,13 +512,14 @@ bool SubArray::Write( NVMainRequest *request )
     ncounter_t numUnchangedBits = 0;
 
     request->address.GetTranslatedAddress( &writeRow, NULL, NULL, NULL, NULL, NULL );
-    uint64_t addrkey=request->address.GetPhysicalAddress()>>8;
-    bool cachemiss=false;
-    if(cacheptr->get(addrkey)==0)
-    {
-            cacheptr->set(addrkey,addrkey);
-            cachemiss=true;
-    }
+
+    // uint64_t addrkey=request->address.GetPhysicalAddress()>>8;
+    // bool cachemiss=false;
+    // if(cacheptr->get(addrkey)==0)
+    // {
+    //         cacheptr->set(addrkey,addrkey);
+    //         cachemiss=true;
+    // }
     /* TODO: Can we remove this sanity check and totally trust IsIssuable()? */
     /* sanity check */
     if( nextWrite > GetEventQueue()->GetCurrentCycle() )
@@ -566,9 +567,9 @@ bool SubArray::Write( NVMainRequest *request )
     }
 
     /* Determine the write time. */
-    if(cachemiss)
-        writeTimer = WriteCellData( request )*20;
-    else
+    // if(cachemiss)
+    //     writeTimer = WriteCellData( request )*20;
+    // else
         writeTimer = WriteCellData( request ); // Assume write-through.
     if( request->flags & NVMainRequest::FLAG_PAUSED ) // This was paused, restart with remaining time
     {
