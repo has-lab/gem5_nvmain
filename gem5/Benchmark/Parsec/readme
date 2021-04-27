@@ -1,0 +1,28 @@
+./writescripts.pl <benchmark> <nthreads>
+There are 13 workloads:
+blackscholes
+
+bodytrack
+
+canneal
+
+dedup
+
+facesim
+
+ferret
+
+fluidanimate
+
+freqmine
+
+streamcluster
+
+swaptions
+
+vips
+
+x264
+
+rtview
+

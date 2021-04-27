@@ -1,0 +1,9 @@
+gem5/build
+gem5/test.out
+gem5/fs-image
+reject-gem5/rejection-gem5-userland/gem5
+nvmain/build
+m5out
+configs
+.vscode
+reject-gem5
