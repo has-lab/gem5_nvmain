@@ -7,4 +7,3 @@ m5out
 configs
 .vscode
 reject-gem5
-gem5/util/ubuntu-16.04.img
