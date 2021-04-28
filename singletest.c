@@ -20,6 +20,7 @@
 #define BLOCK   64
 
 volatile char * data = NULL;
+int * getrand;
 int size = 0;
 
 
@@ -52,7 +53,7 @@ void addrwrite(volatile char * addr,int length)
 {
     register int i;
     register int j=length;
-    for(i=0;i<j;i++)
+    for(i=0;i<j;i+64)
     {
         addr[i]=1;
     }
@@ -63,7 +64,7 @@ void addrread(volatile char *addr,int length)
     register int i;
     register int j=length;
     register int x=0;
-    for(i=0;i<j;i++)
+    for(i=0;i<j;i=i+64)
     {
         x=addr[i];
     }
@@ -77,8 +78,13 @@ main(void)
 
     // data = (char* )memalign(PAGE, size);
     data = (char* )memalign(PAGE, 4096*4096);
-    register int i,j,x=0;
+    // getrand = (int *)malloc(4096*sizeof(int));
+    register int m,i,j,x=0;
     j=0;
+    // for(i = 0; i < 4096; i++) 
+    // {
+    //     getrand[i]=rand()%(4096*4096);
+    // }
     for(i = 0; i < 4096*4096; i=i+4096) 
     {
         data[i]=1;
@@ -86,11 +92,17 @@ main(void)
     gettimeofday(&timeval1, NULL);
     
 
-    for(i=0; i <64; i++)
+    for(i=0; i <4096; i++)
     {     
-        addrread(&data[j],64);
-        j=rand()%(4096*4096);
-        x=j+64;
+        for(x=0;x<64;x=x+64)
+        {
+            // data[j+x]=1;
+            m=data[j+x];
+        }
+        j=j+1;
+        x=rand()%(4096*4096);
+        // x=j+1;
+        // j=rand()%(4096*4096);
         if(j>=4096*4096)
         {
             j=(j+1)%(4096*4096);
