@@ -21,21 +21,6 @@
 
 volatile char * data = NULL;
 int size = 0;
-int num_threads = 0;
-
-struct result_s
-{
-    int skiped;
-    int rejected;
-    int processed;
-};
-
-
-void gem5(char * pointer)
-{
-    __asm__ __volatile__ (".byte 0x0F, 0x04; .word 0x55;");
-}
-
 
 
 int timeval_subtract(struct timeval *result, struct timeval *x, struct timeval *y)
@@ -63,36 +48,52 @@ int timeval_subtract(struct timeval *result, struct timeval *x, struct timeval *
     return x->tv_sec < y->tv_sec;
 }
 
+void addrwrite(volatile char * addr,int length)
+{
+    register int i;
+    register int j=length;
+    for(i=0;i<j;i++)
+    {
+        addr[i]=1;
+    }
+}
+
+void addrread(volatile char *addr,int length)
+{
+    register int i;
+    register int j=length;
+    register int x=0;
+    for(i=0;i<j;i++)
+    {
+        x=addr[i];
+    }
+}
+
+
 int
 main(void)
 {
     struct timeval timeval1, timeval2, timeval_result;
-    size = 4096;
-    num_threads = 8;
-    // srand((unsigned)time(NULL));
-    bool enable_rejection = 1;
-    pthread_t threads[num_threads];
-    struct result_s results[num_threads];
 
     // data = (char* )memalign(PAGE, size);
-    data = (char* )memalign(PAGE, 4096*16);
-    // for(int i = 0; i < size; i++) 
-    //     gem5(data+i);
-    register int i,j;
-    register int x=1;
+    data = (char* )memalign(PAGE, 4096*4096);
+    register int i,j,x=0;
     j=0;
-
+    for(i = 0; i < 4096*4096; i=i+4096) 
+    {
+        data[i]=1;
+    }
     gettimeofday(&timeval1, NULL);
     
 
-    for(i=0; i <4096; i++)
+    for(i=0; i <64; i++)
     {     
-        // x=data[j];
-        data[j]=1;
-        j=j+64;
-        if(j>=4096*16)
+        addrread(&data[j],64);
+        j=rand()%(4096*4096);
+        x=j+64;
+        if(j>=4096*4096)
         {
-            j=(j+1)%(4096*16);
+            j=(j+1)%(4096*4096);
         }
     }
         
