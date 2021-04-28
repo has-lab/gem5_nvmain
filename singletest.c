@@ -30,43 +30,13 @@ struct result_s
     int processed;
 };
 
-// void reset_stats()
-// {
-//     __asm__ __volatile__ (".byte 0x0F, 0x04; .word 0x40;");
-// }
-
-// void dump_stats()
-// {
-//     __asm__ __volatile__ (".byte 0x0F, 0x04; .word 0x41;");
-// }
-
 
 void gem5(char * pointer)
 {
     __asm__ __volatile__ (".byte 0x0F, 0x04; .word 0x55;");
 }
 
-// void gem5_clean(char * pointer)
-// {
-//     __asm__ __volatile__ (".byte 0x0F, 0x04; .word 0x56;");
-// }
 
-// void *thread(void *args) 
-// {
-//     struct result_s *result = (struct result_s *)args;
-//     result->skiped = 0;
-//     result->rejected = 0;
-//     result->processed = 0;
-
-//     for(int i = 0; i < size; i++) {
-//         if ( i % 0x100 == 0 )
-//             result->skiped++;
-//         else if ( *(data + i) == 0 )
-//             result->rejected++;
-//         else
-//             result->processed++;
-//     }
-// }
 
 int timeval_subtract(struct timeval *result, struct timeval *x, struct timeval *y)
 {
@@ -105,7 +75,7 @@ main(void)
     struct result_s results[num_threads];
 
     // data = (char* )memalign(PAGE, size);
-    data = (char* )memalign(PAGE, 65536*256);
+    data = (char* )memalign(PAGE, 4096*16);
     // for(int i = 0; i < size; i++) 
     //     gem5(data+i);
     register int i,j;
@@ -119,10 +89,10 @@ main(void)
     {     
         // x=data[j];
         data[j]=1;
-        j=j+128;
-        if(j>=65536*256)
+        j=j+64;
+        if(j>=4096*16)
         {
-            j=(j+1)%(65536*256);
+            j=(j+1)%(4096*16);
         }
     }
         
